@@ -1,0 +1,6 @@
+node_modules/
+.env
+.env.local
+*.pem
+espn_data.json
+bets.json

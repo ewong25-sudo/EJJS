@@ -1,0 +1,36 @@
+# fly.toml app configuration file generated for ejjs-server on 2026-05-20T12:45:34-07:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'ejjs-server'
+primary_region = 'lax'
+
+[build]
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  # Keep the single machine always running so in-memory state (ESPN session)
+  # and the mounted volume stay attached. No auto-stop = no surprise restarts
+  # that drop the connection.
+  auto_stop_machines = false
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ['app']
+
+[env]
+  PORT = '8080'
+  NODE_ENV = 'production'
+  DATA_DIR = '/data'
+
+# Persistent volume (already created) so the ESPN session + saved bets survive
+# restarts/deploys.
+[[mounts]]
+  source = 'ejjs_data'
+  destination = '/data'
+
+[[vm]]
+  memory = '1gb'
+  cpus = 1
+  memory_mb = 1024
